@@ -22,7 +22,9 @@ function Review() {
 
   function handleRandomClick() {
     const randomIndex = Math.floor(Math.random() * peopleData.length);
-    setIndex(randomIndex);
+    setIndex((index) =>
+      index == randomIndex ? index + 1 : (index = randomIndex)
+    );
   }
 
   return (
