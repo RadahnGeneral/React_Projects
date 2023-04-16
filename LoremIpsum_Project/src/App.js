@@ -3,15 +3,15 @@ import data from "./data";
 function App() {
   const [count, setCount] = useState(0);
   const [text, setText] = useState([]);
-  const [show, setShow] = useState(true);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    let amount = Number(count);
     let value;
-    if (count <= 0 || count === "") value = 1;
-    else if (count > data.length) value = data.length;
-    else value = count;
+    if (amount <= 0 || String(amount) === "") value = 1;
+    else if (amount > data.length) value = data.length;
+    else value = amount;
 
     const user_choice_para = data.slice(0, value);
     setText(user_choice_para);
