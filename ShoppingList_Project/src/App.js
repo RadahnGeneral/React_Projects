@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import List from "./components/List";
-import AlertAdd from "./components/AlertAdd";
-import AlertEmpty from "./components/AlertEmpty";
-import AlertRemove from "./components/AlertRemove";
-import AlertEdit from "./components/AlertEdit";
+import Alert from "./components/Alert";
 
 function App() {
-  const [visibleAdd, setVisibleAdd] = useState(false);
-  const [visibleEmpty, setVisibleEmpty] = useState(false);
-  const [visibleRemove, setVisibleRemove] = useState(false);
-  const [visibleEdit, setVisibleEdit] = useState(false);
+  const [alert, setAlert] = useState({
+    show: false,
+    msg: "",
+    type: "success",
+  });
+
   const [inputValue, setInputValue] = useState("");
   const [buttonValue, setButtonValue] = useState("Submit");
   const [editedIndex, setEditedIndex] = useState(0);
@@ -19,57 +18,61 @@ function App() {
 
   const [newList, setNewList] = useState([]);
 
-  const [notes, setNotes] = useState([]);
-
-  const [myData, setMyData] = useState(null);
-  const [dataLoaded, setDataLoaded] = useState(false);
-
-  function handleChange(e) {
-    setItem(e.target.value);
-    setInputValue(e.target.value);
-  }
-
   function submitForm(e) {
     e.preventDefault();
-
-    if (buttonValue === "Submit") {
-      setItemList((prevList) => {
-        return [...prevList, item];
+    if (!inputValue) {
+      setAlert({
+        show: true,
+        type: "danger",
+        msg: "Please type in the required information",
       });
-
-      setVisibleAdd(true);
+      return;
+    }
+    if (buttonValue === "Submit") {
+      setAlert({
+        show: true,
+        msg: "Item add to the list",
+        type: "success",
+      });
+      setItemList([...itemList, item]);
     } else if (buttonValue === "Edit") {
-      console.log(itemList);
-
+      setAlert({
+        show: true,
+        msg: "Value changed",
+        type: "success",
+      });
       const updatedList = itemList.splice(editedIndex, 1);
       itemList.splice(editedIndex, 0, item);
+      setItem(itemList);
       localStorage.setItem("myItems", JSON.stringify(itemList));
       setNewList(updatedList);
-      setVisibleEdit(true);
       setButtonValue("Submit");
     }
   }
 
   function clearList() {
     if (window.confirm("Delete all items?")) {
+      setAlert({
+        show: true,
+        msg: "Empty the list",
+        type: "danger",
+      });
       setItemList([]);
-      setVisibleEmpty(true);
+      localStorage.setItem("myItems", JSON.stringify([]));
     }
   }
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setVisibleAdd(false);
-      setVisibleEmpty(false);
-      setVisibleRemove(false);
-      setVisibleEdit(false);
+      setAlert((prevAlert) => {
+        return { ...prevAlert, show: false };
+      });
     }, 1500);
     return () => clearTimeout(timer);
-  }, [itemList, visibleRemove]);
+  }, [itemList, newList, inputValue]);
 
   useEffect(() => {
     setItemList(itemList);
-    setNotes(itemList);
     if (itemList.length > 0) {
       localStorage.setItem("myItems", JSON.stringify(itemList));
     }
@@ -85,10 +88,8 @@ function App() {
   return (
     <section>
       <section className="section-center">
-        <AlertEmpty visibleEmpty={visibleEmpty} />
-        <AlertAdd itemList={itemList} visibleAdd={visibleAdd} />
-        <AlertRemove itemList={itemList} visibleRemove={visibleRemove} />
-        <AlertEdit itemList={itemList} visibleEdit={visibleEdit} />
+        {alert.show ? <Alert {...alert} /> : <div></div>}
+
         <form className="grocery-form" onSubmit={submitForm}>
           <h3>Grocery Bud</h3>
           <div className="form-control">
@@ -98,7 +99,10 @@ function App() {
               value={inputValue}
               type="text"
               name="item"
-              onChange={handleChange}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                setItem(e.target.value);
+              }}
             />
             <button className="submit-btn">{buttonValue}</button>
           </div>
@@ -106,17 +110,17 @@ function App() {
         <List
           itemList={itemList}
           setItemList={setItemList}
-          visibleRemove={visibleRemove}
-          setVisibleRemove={setVisibleRemove}
           item={item}
           setInputValue={setInputValue}
           setButtonValue={setButtonValue}
           setEditedIndex={setEditedIndex}
-          setVisibleEdit={setVisibleEdit}
+          setAlert={setAlert}
         />
-        <button className="clear-btn" onClick={clearList}>
-          Clear items
-        </button>
+        {itemList.length > 0 && (
+          <button className="clear-btn" onClick={clearList}>
+            Clear items
+          </button>
+        )}
       </section>
     </section>
   );

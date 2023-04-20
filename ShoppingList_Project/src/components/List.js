@@ -2,32 +2,39 @@ import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 const List = ({
   itemList,
-  setItemList,
-  setVisibleRemove,
-  item,
   setButtonValue,
   setInputValue,
   setEditedIndex,
+  setAlert,
 }) => {
-  const [newDeleteList, setNewDeleteList] = useState([]);
-
+  const [newList, setNewList] = useState([]);
   function deleteItem(indexValue) {
     if (window.confirm("Are you sure?")) {
-      const updatedList = itemList.splice(indexValue, 1);
-      setNewDeleteList(updatedList);
-      setVisibleRemove(true);
+      const newItem = itemList.splice(indexValue, 1);
+      setNewList(newItem);
+      setAlert({
+        show: true,
+        msg: "Item deleted from the list",
+        type: "danger",
+      });
       localStorage.setItem("myItems", JSON.stringify(itemList));
     }
   }
 
   function editItem(indexValue) {
-    console.log(indexValue);
-    console.log(item);
-
     setButtonValue("Edit");
     setInputValue(itemList[indexValue]);
     setEditedIndex(indexValue);
   }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAlert((prevAlert) => {
+        return { ...prevAlert, show: false };
+      });
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [newList]);
 
   let grocery_item_section = itemList.map((item, index) => {
     return (
@@ -41,10 +48,6 @@ const List = ({
       </div>
     );
   });
-
-  useEffect(() => {
-    setItemList(itemList);
-  }, [newDeleteList]);
 
   return (
     <div>
