@@ -8,6 +8,7 @@ const Navbar = () => {
   const [icons, setIcons] = useState(social);
   const [showLink, setShowLink] = useState(false);
   const [windowWidth, setWindowWidth] = useState(0);
+
   const links_section = linkArray.map((link) => {
     const { id, url, text } = link;
     return (
@@ -30,17 +31,16 @@ const Navbar = () => {
     setShowLink(!showLink);
   }
 
-  useEffect(() => {
-    window.addEventListener(
-      "resize",
-      () => {
-        setWindowWidth(window.innerWidth);
-        console.log(windowWidth);
-        if (windowWidth >= 900) setShowLink(false);
-      },
-      []
-    );
-  });
+  // useEffect(() => {
+  //   window.addEventListener(
+  //     "resize",
+  //     () => {
+  //       setWindowWidth(window.innerWidth);
+  //       if (windowWidth >= 900) setShowLink(false);
+  //     },
+  //     []
+  //   );
+  // });
   return (
     <nav>
       <div className="nav-center">
@@ -50,14 +50,18 @@ const Navbar = () => {
             <FaBars />
           </button>
         </div>
-        <div className="links-container">
+        <div
+          className={`${
+            showLink ? "show-container links-container" : "links-container"
+          }`}
+        >
           <ul className="links">{links_section}</ul>
         </div>
         <div>
           <ul className="social-icons">{social_section}</ul>
         </div>
       </div>
-      {showLink && <ul className="links">{links_section}</ul>}
+      {/* {showLink && <ul className="links">{links_section}</ul>} */}
     </nav>
   );
 };
