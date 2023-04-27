@@ -7,7 +7,18 @@ const Navbar = () => {
   const [linkArray, setLinkArray] = useState(links);
   const [icons, setIcons] = useState(social);
   const [showLink, setShowLink] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(0);
+  const linksRef = useRef(null);
+  const linksContainerRef = useRef(null);
+
+  useEffect(() => {
+    const linksHeight = linksRef.current.getBoundingClientRect().height;
+    if (showLink) {
+      linksContainerRef.current.style.height = `${linksHeight}px`;
+    } else {
+      linksContainerRef.current.style.height = `0px`;
+    }
+  }, [showLink]);
+  // const [windowWidth, setWindowWidth] = useState(0);
 
   const links_section = linkArray.map((link) => {
     const { id, url, text } = link;
@@ -50,12 +61,10 @@ const Navbar = () => {
             <FaBars />
           </button>
         </div>
-        <div
-          className={`${
-            showLink ? "show-container links-container" : "links-container"
-          }`}
-        >
-          <ul className="links">{links_section}</ul>
+        <div className="links-container" ref={linksContainerRef}>
+          <ul className="links" ref={linksRef}>
+            {links_section}
+          </ul>
         </div>
         <div>
           <ul className="social-icons">{social_section}</ul>
