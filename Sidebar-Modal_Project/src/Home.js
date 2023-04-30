@@ -4,9 +4,13 @@ import Sidebar from "./Sidebar";
 import { AppContext, useGlobalContext } from "./context";
 
 const Home = () => {
-  const { isModalOpen, openModal } = useGlobalContext();
+  const { isModalOpen, openModal, isSidebarOpen, openSidebar } =
+    useGlobalContext();
   return (
     <main>
+      <button className="sidebar-toggle" onClick={openSidebar}>
+        <FaBars />
+      </button>
       <button className="btn" onClick={openModal}>
         show modal
       </button>

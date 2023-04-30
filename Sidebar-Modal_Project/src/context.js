@@ -4,6 +4,7 @@ import App from "./App";
 const AppContext = React.createContext();
 const AppProvider = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -12,15 +13,56 @@ const AppProvider = ({ children }) => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  function openSidebar() {
+    setIsSidebarOpen(true);
+  }
+
+  function closeSidebar() {
+    setIsSidebarOpen(false);
+  }
+
   return (
-    <AppContext.Provider value={{ isModalOpen, openModal, closeModal }}>
-      {" "}
-      {children}{" "}
+    <AppContext.Provider
+      value={{
+        isModalOpen,
+        openModal,
+        closeModal,
+        isSidebarOpen,
+        openSidebar,
+        closeSidebar,
+      }}
+    >
+      {children}
     </AppContext.Provider>
   );
 };
-export const useGlobalContext = () => {
+
+const useGlobalContext = () => {
   return useContext(AppContext);
 };
+export { AppContext, AppProvider, useGlobalContext };
 
-export { AppContext, AppProvider };
+// const AppContext = React.createContext();
+// const AppProvider = ({ children }) => {
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+
+//   const openModal = () => {
+//     setIsModalOpen(true);
+//   };
+
+//   const closeModal = () => {
+//     setIsModalOpen(false);
+//   };
+//   return (
+//     <AppContext.Provider value={{ isModalOpen, openModal, closeModal }}>
+//       {" "}
+//       {children}{" "}
+//     </AppContext.Provider>
+//   );
+// };
+// export const useGlobalContext = () => {
+//   return useContext(AppContext);
+// };
+
+// export { AppContext, AppProvider };
