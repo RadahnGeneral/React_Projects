@@ -5,10 +5,6 @@ import { social, links } from "./data";
 import { useGlobalContext } from "./context";
 
 const Sidebar = () => {
-  // const [showSidebar, setShowSidebar] = useState(false);
-  // function toggleSidebar() {
-  //   setShowSidebar(!showSidebar);
-  // }
   const { isSidebarOpen, closeSidebar } = useGlobalContext();
   const links_section = links.map((link) => {
     const { id, url, text, icon } = link;
