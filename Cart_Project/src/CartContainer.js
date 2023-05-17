@@ -1,9 +1,9 @@
 import React from "react";
 import CartItem from "./CartItem";
-import { useGlobalContext } from "../context";
+import { useGlobalContext } from "./context";
 
 const CartContainer = () => {
-  const { cart, totalPrice, clearCart } = useGlobalContext();
+  const { cart } = useGlobalContext();
   if (cart.length === 0) {
     return (
       <section className="cart">
@@ -17,22 +17,28 @@ const CartContainer = () => {
   }
   return (
     <section className="cart">
+      {/* cart header */}
       <header>
-        <h2>Your bag</h2>
+        <h2>your bag</h2>
       </header>
+      {/* cart items */}
       <div>
         {cart.map((item) => {
           return <CartItem key={item.id} {...item} />;
         })}
       </div>
+      {/* cart footer */}
       <footer>
         <hr />
         <div className="cart-total">
           <h4>
-            total <span>{`$${totalPrice}`}</span>
+            total <span>$0.00</span>
           </h4>
         </div>
-        <button className="btn clear-btn" onClick={() => clearCart()}>
+        <button
+          className="btn clear-btn"
+          onClick={() => console.log("clear cart")}
+        >
           clear cart
         </button>
       </footer>
